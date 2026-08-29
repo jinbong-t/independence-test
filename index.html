@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>나의 독립 정신 찾기 | 내 영혼의 독립운동가</title>
+<meta name="description" content="10가지 질문으로 찾는 나의 독립운동가. 20가지 결과 유형. 광복절·서대문형무소 체험활동 전 추천 테스트.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<!-- 이미지 저장을 위한 html2canvas 라이브러리 -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<style>
+:root{--bg:#08070a;--gold:#c8902a;--gold-l:#e8c060;--gold-d:#7a5518;--cream:#f0e4c8;--text:#ede0cc;--text-dim:#9a8060;--text-f:#5a4830;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text);width:100%;height:100vh;overflow:hidden;position:fixed;top:0;left:0;}
+#canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0;}
+#app{position:relative;width:100%;height:100vh;z-index:1;overflow:hidden;}
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px;opacity:0;transform:translateY(30px);transition:opacity .55s cubic-bezier(.4,0,.2,1),transform .55s cubic-bezier(.4,0,.2,1);pointer-events:none;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
+.scr.on{opacity:1;transform:translateY(0);pointer-events:all;}
+.scr.out{opacity:0;transform:translateY(-30px);}
+.deco-line{width:100%;max-width:320px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-d),transparent);margin:20px auto;}
+
+/* COVER */
+#cover{background:radial-gradient(ellipse 80% 60% at 50% 40%,#1e1508 0%,#08070a 65%);gap:0;}
+.bg-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Noto Serif KR',serif;font-size:18vw;font-weight:900;color:rgba(200,144,42,0.03);white-space:nowrap;pointer-events:none;z-index:-1;letter-spacing:10px;transform:rotate(-10deg);}
+.cv-candle{width:52px;height:52px;margin-bottom:12px;}
+.cv-candle svg{width:52px;height:52px;}
+.flame-anim{animation:flame 2s ease-in-out infinite;transform-origin:50% 90%;transition:opacity 0.3s;}
+@keyframes flame{0%,100%{transform:scaleX(1) scaleY(1) rotate(-2deg);opacity:.9;}25%{transform:scaleX(.92) scaleY(1.08) rotate(2deg);opacity:1;}50%{transform:scaleX(1.05) scaleY(.95) rotate(-1deg);opacity:.85;}75%{transform:scaleX(.95) scaleY(1.04) rotate(3deg);opacity:1;}}
+.cv-tag{font-size:12px;letter-spacing:4px;color:var(--gold-d);text-transform:uppercase;margin-bottom:12px;font-weight:700;}
+.cv-title{font-family:'Noto Serif KR',serif;font-size:clamp(32px,8vw,56px);font-weight:900;color:var(--gold-l);text-align:center;line-height:1.2;text-shadow:0 0 50px rgba(200,144,42,.6);margin-bottom:8px;}
+.cv-sub{font-size:clamp(13px,3vw,16px);color:var(--text-dim);text-align:center;margin-bottom:4px;}
+.cv-info{font-size:11px;color:var(--text-f);letter-spacing:1.5px;margin-bottom:28px;}
+.mic-prompt{font-size:14px;color:var(--cream);margin-bottom:20px;height:20px;text-align:center;font-weight:500;text-shadow:0 0 10px rgba(255,255,255,0.3);}
+.btn-start{background:linear-gradient(135deg,#c8902a,#7a5518);border:1px solid rgba(200,144,42,.5);color:var(--cream);font-family:'Noto Serif KR',serif;font-size:clamp(15px,3.5vw,18px);font-weight:700;padding:16px 42px;border-radius:60px;cursor:pointer;letter-spacing:1.5px;transition:all .3s ease;box-shadow:0 6px 24px rgba(200,144,42,.25),0 0 48px rgba(200,144,42,.08);display:flex;align-items:center;gap:10px;}
+.btn-start:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(200,144,42,.4),0 0 60px rgba(200,144,42,.15);}
+.btn-skip-mic{background:transparent;border:none;color:var(--text-dim);font-size:12px;margin-top:16px;text-decoration:underline;cursor:pointer;opacity:0.7;}
+.btn-skip-mic:hover{opacity:1;}
+
+/* INTRO */
+#intro{gap:0;}
+.it-year{font-size:11px;letter-spacing:4px;color:var(--gold-d);text-transform:uppercase;margin-bottom:36px;display:flex;align-items:center;gap:10px;}
+.it-year::before,.it-year::after{content:'';display:block;width:28px;height:1px;background:var(--gold-d);opacity:.5;}
+.it-body{font-family:'Noto Serif KR',serif;font-size:clamp(16px,3.8vw,22px);line-height:2.1;text-align:center;color:var(--text);max-width:360px;min-height:220px;}
+.cursor{display:inline-block;width:2px;height:1.1em;background:var(--gold);margin-left:1px;vertical-align:bottom;animation:cur .75s step-end infinite;}
+@keyframes cur{0%,100%{opacity:1;}50%{opacity:0;}}
+.btn-go{margin-top:48px;background:transparent;border:1px solid var(--gold-d);color:var(--gold);font-family:'Noto Sans KR',sans-serif;font-size:13px;font-weight:500;padding:12px 36px;border-radius:60px;cursor:pointer;letter-spacing:1px;transition:all .35s;opacity:0;transform:translateY(8px);}
+.btn-go.show{opacity:1;transform:translateY(0);}
+.btn-go:hover{background:rgba(200,144,42,.1);border-color:var(--gold);}
+
+/* QUESTION */
+#question{justify-content:flex-start;padding-top:64px;}
+.prog-wrap{position:fixed;top:0;left:0;width:100%;height:3px;background:rgba(200,144,42,.12);z-index:200;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--gold-d),var(--gold-l));transition:width .5s ease;box-shadow:0 0 10px var(--gold);}
+.q-status{position:fixed;top:10px;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:6px;z-index:100;pointer-events:none;}
+.q-dot{width:6px;height:6px;border-radius:50%;background:var(--gold-d);opacity:.35;transition:all .3s;}
+.q-dot.done{background:var(--gold);opacity:1;box-shadow:0 0 6px var(--gold);}
+.q-dot.cur{background:var(--gold-l);opacity:1;box-shadow:0 0 10px var(--gold-l);transform:scale(1.3);}
+.q-inner{width:100%;max-width:440px;margin:0 auto;display:flex;flex-direction:column;align-items:center;}
+.q-num{font-size:10px;letter-spacing:4px;color:var(--gold-d);text-transform:uppercase;margin-bottom:20px;text-align:center;}
+.q-ctx{font-family:'Noto Serif KR',serif;font-size:clamp(12px,2.5vw,14px);color:var(--text-f);text-align:center;margin-bottom:14px;font-style:italic;line-height:1.8;}
+.q-txt{font-family:'Noto Serif KR',serif;font-size:clamp(19px,4.5vw,26px);font-weight:700;color:var(--gold-l);text-align:center;line-height:1.55;padding:0 8px;}
+.q-sep{margin:22px auto;display:flex;align-items:center;gap:10px;color:var(--gold-d);font-size:12px;opacity:.6;}
+.q-sep::before,.q-sep::after{content:'';display:block;width:40px;height:1px;background:var(--gold-d);}
+.answers{display:flex;flex-direction:column;gap:12px;width:100%;}
+.btn-ans{background:rgba(16,12,20,.85);border:1px solid rgba(200,144,42,.2);color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:clamp(13px,2.8vw,15px);padding:18px 20px;border-radius:14px;cursor:pointer;text-align:left;line-height:1.65;position:relative;transition:all .25s ease;backdrop-filter:blur(6px);display:flex;align-items:flex-start;gap:14px;}
+.ans-badge{flex-shrink:0;width:26px;height:26px;border-radius:50%;border:1px solid rgba(200,144,42,.3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--gold-d);margin-top:1px;transition:all .25s;}
+.btn-ans:hover{border-color:rgba(200,144,42,.55);background:rgba(200,144,42,.07);transform:translateX(6px);color:var(--cream);}
+.btn-ans:hover .ans-badge{background:var(--gold-d);color:var(--cream);border-color:var(--gold-d);}
+.btn-ans.selected{border-color:var(--gold);background:rgba(200,144,42,.15);color:var(--cream);}
+.btn-ans.selected .ans-badge{background:var(--gold);color:#111;border-color:var(--gold);}
+
+/* LOADING */
+#loading{gap:0;}
+.ld-icon{font-size:44px;margin-bottom:24px;animation:flame 1.2s ease-in-out infinite;transform-origin:50% 90%;display:block;}
+.ld-title{font-family:'Noto Serif KR',serif;font-size:clamp(17px,4vw,22px);color:var(--gold);text-align:center;line-height:1.7;margin-bottom:6px;}
+.ld-sub{font-size:12px;color:var(--text-f);text-align:center;letter-spacing:1px;}
+.ld-dots{display:flex;gap:8px;margin-top:28px;}
+.ld-d{width:7px;height:7px;border-radius:50%;background:var(--gold-d);animation:dp 1.2s ease-in-out infinite;}
+.ld-d:nth-child(2){animation-delay:.2s;}.ld-d:nth-child(3){animation-delay:.4s;}
+@keyframes dp{0%,80%,100%{transform:scale(.5);opacity:.3;}40%{transform:scale(1.1);opacity:1;}}
+
+/* RESULT */
+#result{justify-content:flex-start;padding:30px 18px 48px;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+.res-inner{width:100%;max-width:460px;margin:0 auto;}
+/* captureArea 안에 모든 결과 요소 포함 */
+#captureArea { padding: 24px; background: var(--bg); border-radius: 12px; margin-bottom: 20px;}
+.res-pre{font-size:10px;letter-spacing:4px;color:var(--gold-d);text-transform:uppercase;text-align:center;margin-bottom:12px;}
+.portrait-wrap{width:160px;height:210px;margin:0 auto 20px;border-radius:8px;overflow:hidden;border:2px solid var(--gold-d);box-shadow:0 10px 30px rgba(0,0,0,0.5), 0 0 20px rgba(200,144,42,0.2);background:#1a1510;position:relative;}
+.portrait-img{width:100%;height:100%;object-fit:cover;}
+.res-name{font-family:'Noto Serif KR',serif;font-size:clamp(32px,8vw,52px);font-weight:900;color:var(--gold-l);text-align:center;text-shadow:0 0 30px rgba(200,144,42,.4);line-height:1.1;margin-bottom:4px;}
+.res-dates{font-size:13px;color:var(--text-f);text-align:center;letter-spacing:2px;margin-bottom:4px;}
+.mugung{text-align:center;font-size:16px;letter-spacing:10px;opacity:.35;user-select:none;margin:12px 0;}
+
+.parch-card{position:relative;background:linear-gradient(145deg,#f0e4c0 0%,#e4cc8c 40%,#d8bc70 100%);border-radius:18px;padding:30px 24px;margin:10px 0;box-shadow:0 16px 48px rgba(0,0,0,.65),inset 0 0 0 1px rgba(180,130,40,.25),inset 0 1px 0 rgba(255,255,200,.4);}
+.parch-card::before{content:'';position:absolute;inset:8px;border:1px solid rgba(140,100,30,.25);border-radius:12px;pointer-events:none;}
+.parch-card::after{content:'';position:absolute;inset:0;border-radius:18px;background-image:repeating-linear-gradient(0deg,rgba(140,100,30,.04) 0px,rgba(140,100,30,.04) 1px,transparent 1px,transparent 28px);pointer-events:none;}
+.parch-type{font-family:'Noto Serif KR',serif;font-size:clamp(13px,3vw,16px);font-weight:700;color:#5a3510;text-align:center;margin-bottom:18px;position:relative;z-index:1;}
+.parch-qbox{background:rgba(120,80,20,.09);border-left:3px solid rgba(140,100,30,.5);border-radius:0 8px 8px 0;padding:12px 16px;margin:14px 0;position:relative;z-index:1;}
+.parch-qbox p{font-family:'Noto Serif KR',serif;font-size:clamp(11px,2.4vw,13px);color:#4a2e08;line-height:1.85;font-style:italic;}
+.parch-desc{font-size:clamp(12px,2.5vw,14px);color:#3a2000;line-height:1.85;text-align:justify;word-break:keep-all;position:relative;z-index:1;}
+.parch-tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:18px;position:relative;z-index:1;justify-content:center;}
+.tag{background:rgba(120,80,20,.12);border:1px solid rgba(120,80,20,.25);color:#5a3510;font-size:11px;font-weight:700;padding:4px 12px;border-radius:60px;}
+.capture-watermark{text-align:center;font-size:10px;color:var(--text-f);margin-top:20px;display:none;}
+
+.res-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;}
+.btn-save{background:linear-gradient(135deg,#c8902a,#7a5518);border:none;color:#fff;font-family:'Noto Sans KR',sans-serif;font-size:14px;font-weight:700;padding:16px 10px;border-radius:12px;cursor:pointer;transition:all .3s;letter-spacing:.5px;grid-column:1/-1;}
+.btn-save:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(200,144,42,.3);}
+.btn-copy, .btn-retry{background:rgba(200,144,42,.07);border:1px solid rgba(200,144,42,.28);color:var(--gold);font-family:'Noto Sans KR',sans-serif;font-size:13px;padding:14px 10px;border-radius:12px;cursor:pointer;transition:all .3s;white-space:nowrap;}
+.btn-copy:hover, .btn-retry:hover{background:rgba(200,144,42,.14);}
+.toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--gold);color:#111;font-size:13px;font-weight:700;padding:12px 28px;border-radius:60px;opacity:0;pointer-events:none;z-index:999;transition:all .3s ease;white-space:nowrap;box-shadow:0 4px 12px rgba(0,0,0,0.3);}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<div id="app">
+
+<!-- COVER -->
+<div class="scr on" id="cover">
+  <div class="bg-text">대한독립만세</div>
+  <div class="cv-candle">
+    <svg viewBox="0 0 52 52" fill="none">
+      <g class="flame-anim" id="candleFlame">
+        <ellipse cx="26" cy="13" rx="8" ry="11" fill="url(#f1)" opacity=".9"/>
+        <ellipse cx="26" cy="15" rx="4.5" ry="6.5" fill="url(#f2)"/>
+      </g>
+      <rect x="19" y="24" width="14" height="22" rx="2.5" fill="#c8a858"/>
+      <rect x="19" y="24" width="14" height="5" rx="1.5" fill="#b09040"/>
+      <rect x="21" y="29" width="2.5" height="15" rx="1" fill="rgba(180,140,50,.35)"/>
+      <rect x="25" y="29" width="2.5" height="15" rx="1" fill="rgba(180,140,50,.35)"/>
+      <rect x="21" y="44" width="10" height="2.5" rx="1" fill="#a08030" opacity=".55"/>
+      <line x1="26" y1="24" x2="26" y2="19" stroke="#9a7020" stroke-width="1.5" stroke-linecap="round"/>
+      <defs>
+        <radialGradient id="f1" cx="50%" cy="60%" r="50%">
+          <stop offset="0%" stop-color="#fff8a0"/>
+          <stop offset="60%" stop-color="#f0a020"/>
+          <stop offset="100%" stop-color="#c03010" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="f2" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#ffffc0"/>
+          <stop offset="100%" stop-color="#f8d040" stop-opacity=".4"/>
+        </radialGradient>
+      </defs>
+    </svg>
+  </div>
+  <p class="cv-tag">빼앗긴 들에도 봄은 오는가</p>
+  <h1 class="cv-title">나의 독립 정신<br>찾기</h1>
+  <p class="cv-sub">결의와 열망으로 가득 찬 내 영혼의 독립운동가는?</p>
+  <div class="deco-line"></div>
+  
+  <p class="mic-prompt" id="micPrompt"></p>
+  
+  <button class="btn-start" id="btnStart">
+    <span>🎤 마이크 허용하고 '후~' 불어서 시작</span>
+  </button>
+  <button class="btn-skip-mic" id="btnSkipMic">마이크 없이 바로 시작하기</button>
+</div>
+
+<!-- INTRO -->
+<div class="scr" id="intro">
+  <p class="it-year">1919 &middot; 3 &middot; 1</p>
+  <div class="it-body" id="itBody"><span class="cursor"></span></div>
+  <button class="btn-go" id="btnGo">결의를 다지며 시작 &rarr;</button>
+</div>
+
+<!-- QUESTION -->
+<div class="scr" id="question">
+  <div class="prog-wrap"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+  <div class="q-status" id="qStatus"></div>
+  <div class="q-inner">
+    <p class="q-num" id="qNum">QUESTION 01</p>
+    <p class="q-ctx" id="qCtx"></p>
+    <p class="q-txt" id="qTxt"></p>
+    <div class="q-sep">선택</div>
+    <div class="answers" id="answers">
+      <button class="btn-ans" id="bA" onclick="pick(0)"><span class="ans-badge">A</span><span id="aA"></span></button>
+      <button class="btn-ans" id="bB" onclick="pick(1)"><span class="ans-badge">B</span><span id="aB"></span></button>
+    </div>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div class="scr" id="loading">
+  <span class="ld-icon">&#128367;&#65039;</span>
+  <p class="ld-title">당신의 독립 정신을<br>분석하고 있습니다&hellip;</p>
+  <p class="ld-sub">역사의 불꽃 속에서 찾는 중</p>
+  <div class="ld-dots"><div class="ld-d"></div><div class="ld-d"></div><div class="ld-d"></div></div>
+</div>
+
+<!-- RESULT -->
+<div class="scr" id="result">
+  <div class="res-inner">
+    <div id="captureArea">
+      <p class="res-pre">내 영혼의 독립운동가</p>
+      
+      <!-- 초상화 영역 -->
+      <div class="portrait-wrap" id="rPortraitWrap">
+        <img src="" alt="초상화" class="portrait-img" id="rImg">
+        <div id="rPlaceholder" style="display:none; width:100%; height:100%; flex-direction:column; align-items:center; justify-content:center; background:radial-gradient(circle, #2a1f10 0%, #08070a 80%);">
+          <div style="transform:scale(1.2); margin-bottom:10px;">
+            <svg viewBox="0 0 52 52" fill="none" style="width:52px;height:52px;">
+              <g class="flame-anim">
+                <ellipse cx="26" cy="13" rx="8" ry="11" fill="url(#f1_r)" opacity=".9"/>
+                <ellipse cx="26" cy="15" rx="4.5" ry="6.5" fill="url(#f2_r)"/>
+              </g>
+              <rect x="19" y="24" width="14" height="22" rx="2.5" fill="#c8a858"/>
+              <rect x="19" y="24" width="14" height="5" rx="1.5" fill="#b09040"/>
+              <defs>
+                <radialGradient id="f1_r" cx="50%" cy="60%" r="50%">
+                  <stop offset="0%" stop-color="#fff8a0"/><stop offset="60%" stop-color="#f0a020"/><stop offset="100%" stop-color="#c03010" stop-opacity="0"/>
+                </radialGradient>
+                <radialGradient id="f2_r" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#ffffc0"/><stop offset="100%" stop-color="#f8d040" stop-opacity=".4"/>
+                </radialGradient>
+              </defs>
+            </svg>
+          </div>
+          <div style="color:var(--gold-d); font-size:11px; letter-spacing:2px; font-weight:700;">영원한 불꽃</div>
+        </div>
+      </div>
+      
+      <p class="res-name" id="rName"></p>
+      <p class="res-dates" id="rDates"></p>
+      <div class="mugung">&#10022; &#10022; &#10022;</div>
+      
+      <div class="parch-card">
+        <p class="parch-type" id="rType"></p>
+        <div class="parch-qbox"><p id="rQuote"></p></div>
+        <p class="parch-desc" id="rDesc"></p>
+        <div class="parch-tags" id="rTags"></div>
+      </div>
+      <div class="capture-watermark" id="watermark">나의 독립 정신 찾기 테스트 결과</div>
+    </div>
+    
+    <div class="res-btns">
+      <button class="btn-save" onclick="saveImage()">📸 결과 이미지로 저장하기</button>
+      <button class="btn-copy" onclick="copyResult()">📋 결과 복사</button>
+      <button class="btn-retry" onclick="retry()">&#8617; 다시하기</button>
+    </div>
+  </div>
+</div>
+
+</div>
+<div class="toast" id="toast">복사되었습니다!</div>
+
+<script>
+/* === PARTICLES === */
+const cvs=document.getElementById('canvas'),cx=cvs.getContext('2d');
+let W=cvs.width=window.innerWidth,H=cvs.height=window.innerHeight;
+window.addEventListener('resize',()=>{W=cvs.width=window.innerWidth;H=cvs.height=window.innerHeight;});
+class Spark{
+  constructor(){this.reset(true);}
+  reset(i){this.x=Math.random()*W;this.y=i?Math.random()*H:H+8;this.r=Math.random()*1.8+.4;this.vy=-(Math.random()*.9+.3);this.vx=(Math.random()-.5)*.5;this.a=Math.random()*.55+.15;this.h=Math.random()*28+16;}
+  update(){this.y+=this.vy;this.x+=this.vx;if(this.y<-8)this.reset(false);}
+  draw(){const f=Math.max(0,this.y/H);cx.beginPath();cx.arc(this.x,this.y,this.r,0,Math.PI*2);cx.fillStyle='hsla('+this.h+',90%,62%,'+(this.a*f)+')';cx.fill();}
+}
+const sparks=Array.from({length:70},()=>new Spark());
+(function loop(){cx.clearRect(0,0,W,H);sparks.forEach(s=>{s.update();s.draw();});requestAnimationFrame(loop);})();
+
+/* === DATA === */
+const FIGHTERS=[
+  {name:'윤동주',dates:'1917~1945',img:'img/yundongju.jpg',type:'깊은 신념을 가진 성찰하는 시인',quote:'죽는 날까지 하늘을 우러러 한 점 부끄럼이 없기를...',desc:'시로써 저항했던 민족 시인입니다. 조용하지만 내면 깊은 곳에서 뜨겁게 타오르는 불꽃을 품고 있었습니다.',tags:['감수성 풍부','자기성찰','문학적 저항'],profile:[0,0,0,0,0,0,0,0,0,1]},
+  {name:'이육사',dates:'1904~1944',img:'img/leeyuksa.jpg',type:'강인한 의지의 저항 시인',quote:'매운 계절의 채찍에 갈겨 마침내 북방으로 휩쓸려 오다.',desc:'264번 수형번호를 필명으로 삼은 강인한 저항 시인입니다. 가장 절망적인 순간에도 봄날의 희망을 노래했습니다.',tags:['강인한 저항','불굴의 의지','희망'],profile:[0,1,0,0,0,0,1,0,1,1]},
+  {name:'한용운',dates:'1879~1944',img:'img/hanyongun.jpg',type:'평화로운 불꽃, 철학하는 승려',quote:'님은 갔습니다. 아아, 사랑하는 나의 님은 갔습니다.',desc:'불교 승려이자 시인으로 민족대표 33인 중 한 명입니다. 총독부가 보이는 방향 대신 다른 방향으로 집을 지어 끝까지 저항했습니다.',tags:['철학적 사유','평화적 저항','불굴'],profile:[0,1,0,0,0,0,0,0,0,0]},
+  {name:'안중근',dates:'1879~1910',img:'img/anjunggeun.jpg',type:'정의를 위해 목숨을 건 의사',quote:'하루라도 책을 읽지 않으면 입에 가시가 돋친다.',desc:'탁월한 사격 실력과 강인한 정의감으로 하얼빈 의거를 감행했습니다. 사형 직전까지 동양 평화론을 집필했습니다.',tags:['결단력','정의감','용기'],profile:[1,1,1,1,0,1,1,1,1,1]},
+  {name:'윤봉길',dates:'1908~1932',img:'img/yunbonggil.jpg',type:'나라를 위해 모든 것을 바친 의사',quote:'장부가 집을 떠나 뜻을 이루기 전에는 살아서 돌아오지 않겠다.',desc:'홍커우 공원 의거로 세계를 놀라게 한 독립투사입니다. 김구 선생과 시계를 바꾸며 마지막 작별을 고했습니다.',tags:['희생정신','애국심','결단력'],profile:[1,1,1,1,0,1,1,1,1,0]},
+  {name:'이봉창',dates:'1900~1932',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/%EC%9D%B4%EB%B4%89%EC%B0%BD.jpg/500px-%EC%9D%B4%EB%B4%89%EC%B0%BD.jpg',type:'평범한 청년이 선택한 대담한 역사',quote:'영원한 쾌락을 얻기 위해 잠깐 괴로움을 참겠습니다.',desc:'일왕을 향해 수류탄을 투척한 독립투사입니다. 평범하게 살아가던 청년이 독립의 불꽃을 선택했습니다.',tags:['대담함','희생정신','독립 의지'],profile:[1,1,0,1,0,1,0,1,1,1]},
+  {name:'유관순',dates:'1902~1920',img:'img/yoogwansoon.jpg',type:'불꽃처럼 타오른 독립의 함성',quote:'나라를 잃은 고통은 이길 수 없습니다.',desc:'3.1 운동의 상징. 18세의 나이로 아우내 장터에서 독립만세를 이끌었고 모진 고문 속에서도 굴하지 않았습니다.',tags:['열정','불굴의 용기','카리스마'],profile:[1,1,1,1,0,1,1,1,0,0]},
+  {name:'김마리아',dates:'1892~1944',img:'img/kimmaria.jpg',type:'지혜로운 조직의 리더',quote:'나는 대한의 독립과 결혼했습니다.',desc:'대한애국부인회를 이끈 여성 독립운동의 선구자입니다. 탁월한 조직력으로 여성들의 독립운동을 체계화했습니다.',tags:['조직력','지도력','지혜'],profile:[1,0,1,1,1,0,1,1,0,0]},
+  {name:'김구',dates:'1876~1949',img:'img/kimgu.jpg',type:'민족을 이끈 강인한 지도자',quote:'나의 소원은 첫째도, 둘째도, 셋째도 대한 독립입니다.',desc:'대한민국 임시정부의 주석으로 끝까지 독립운동을 이끈 민족의 지도자입니다.',tags:['전략적 사고','강한 리더십','민족 사랑'],profile:[1,1,1,1,1,1,1,1,0,0]},
+  {name:'안창호',dates:'1878~1938',img:'img/ahnchangho.jpg',type:'교육으로 나라를 구하려 한 선생',quote:'거짓 없는 사람이 나라를 구한다.',desc:'무실역행을 실천한 민족 교육자입니다. 대성학교와 흥사단을 세워 민족 계몽에 힘썼습니다.',tags:['교육열','체계적','장기적 안목'],profile:[0,0,1,1,1,0,0,1,0,0]},
+  {name:'신채호',dates:'1880~1936',img:'img/shinchaeho.jpg',type:'붓으로 역사를 바로잡은 지식인',quote:'역사를 잊은 민족에게 미래는 없다.',desc:'역사학의 선구자이자 아나키스트 독립운동가입니다. 일제의 역사 왜곡에 맞서 민족정기를 지켰습니다.',tags:['지식','날카로운 비판','역사의식'],profile:[0,0,0,0,0,0,0,0,1,1]},
+  {name:'방정환',dates:'1899~1931',img:'img/bangjeong.jpg',type:'어린이의 꿈을 심어준 따뜻한 혁명가',quote:'어린이는 내일의 나라입니다.',desc:'어린이날을 만들고 아동 인권을 위해 평생을 바쳤습니다. 어린 세대에게 희망을 심어주는 것이 독립이라 믿었습니다.',tags:['따뜻한 마음','희망','미래지향'],profile:[0,0,1,0,0,0,0,0,0,0]},
+  {name:'이회영',dates:'1867~1932',img:'https://upload.wikimedia.org/wikipedia/commons/5/54/%EC%9D%B4%ED%9A%8C%EC%98%81.jpg',type:'모든 것을 버리고 독립만을 선택한 혁명가',quote:'나라가 없으면 무슨 소용이 있겠소.',desc:'조선 최고 명문가의 자제로, 전 재산을 처분하여 만주에 신흥무관학교를 세웠습니다.',tags:['완전한 헌신','희생','실행력'],profile:[1,1,1,1,0,0,1,1,0,0]},
+  {name:'홍범도',dates:'1868~1943',img:'img/hongbeomdo.jpg',type:'봉오동의 영웅, 전설의 장군',quote:'나는 총이 있는 한 싸울 것이다.',desc:'봉오동, 청산리 전투를 이끈 전설적인 독립군 장군입니다. 탁월한 전술로 최대의 승리를 이끌었습니다.',tags:['용맹','전술적 사고','리더십'],profile:[1,1,1,1,0,1,1,1,0,1]},
+  {name:'손병희',dates:'1861~1922',img:'img/sonbyonghee.jpg',type:'민족의 단결을 이끈 종교 지도자',quote:'독립운동은 정정당당하게 평화적으로 해야 한다.',desc:'3.1 운동을 주도한 천도교 교주입니다. 비폭력 평화 독립운동의 원칙을 세웠습니다.',tags:['통합력','외교력','종교적 신념'],profile:[0,0,1,0,1,0,0,1,0,0]},
+  {name:'나혜석',dates:'1896~1948',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/%EB%82%98%ED%98%9C%EC%84%9D-Na_Hye-seok.jpg/500px-%EB%82%98%ED%98%9C%EC%84%9D-Na_Hye-seok.jpg',type:'시대를 앞선 예술가 독립투사',quote:'나의 생애는 실패였지만, 후세 사람들이 이해해 줄 것이다.',desc:'최초의 여성 서양화가이자 독립운동가입니다. 예술과 독립을 묶어 시대를 앞서간 선구자입니다.',tags:['창의성','선구자 정신','예술'],profile:[0,0,0,0,1,0,0,0,1,1]},
+  {name:'권기옥',dates:'1901~1988',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Kwon_Ki-ok1928.jpg/500px-Kwon_Ki-ok1928.jpg',type:'하늘을 개척한 최초의 여성 비행사',quote:'불가능을 가능으로 만드는 것이 나의 길이다.',desc:'최초의 여성 비행사로 독립군 비행사로 활동했습니다. 스스로 길을 개척한 개척자입니다.',tags:['도전 정신','개척','용기'],profile:[1,1,0,1,0,1,1,1,1,1]},
+  {name:'박재혁',dates:'1895~1921',img:'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Park_Jae-hyuk.jpg/500px-Park_Jae-hyuk.jpg',type:'책 속에 폭탄을 숨긴 의열단원',quote:'나는 죽음을 두려워하지 않는다.',desc:'부산경찰서에 폭탄을 투척한 의열단원입니다. 책 행상으로 위장하여 대담한 거사를 감행했습니다.',tags:['대담함','결단력','의열단'],profile:[1,1,1,0,0,1,1,1,1,1]},
+  {name:'김상옥',dates:'1890~1923',img:'https://upload.wikimedia.org/wikipedia/commons/9/9a/%EA%B9%80%EC%83%81%EC%98%A5.jpg',type:'홀로 종로를 장악한 전설의 독립투사',quote:'놈들에게 포위당해도, 나의 총은 내가 먼저 쏜다.',desc:'종로경찰서에 폭탄을 투척하고 홀로 싸운 전설적인 독립투사입니다. 끝까지 굴복하지 않았습니다.',tags:['불굴','용맹','독립적'],profile:[1,1,0,1,0,1,1,0,1,1]},
+  {name:'최재형',dates:'1860~1920',img:'https://upload.wikimedia.org/wikipedia/commons/d/df/Choi_Jae-hyung.jpg',type:'독립운동의 든든한 버팀목',quote:'재산도, 목숨도 아깝지 않습니다.',desc:'연해주에서 독립운동을 지원한 후원자입니다. 막대한 재산을 아낌없이 쏟아부었습니다.',tags:['헌신','든든한 지원','실용적'],profile:[1,0,1,1,0,0,0,1,0,0]}
+];
+
+const QUESTIONS=[
+  {ctx:'역사의 갈림길',q:'세상을 바꾸는 가장 좋은 방법은?',a:'글과 예술로 마음을 움직인다',b:'직접 행동으로 변화를 만든다'},
+  {ctx:'부당한 상황',q:'불의를 마주쳤을 때 나의 첫 반응은?',a:'기록하고 알려서 연대한다',b:'망설임 없이 맞서 싸운다'},
+  {ctx:'나의 성향',q:'나는 어떤 사람에 더 가깝나?',a:'조용히 자신만의 길을 걷는 사람',b:'사람들과 함께 앞장서 이끄는 사람'},
+  {ctx:'어려움 속에서',q:'나에게 가장 큰 힘이 되는 것은?',a:'시, 철학 등 정신적인 것들',b:'동료들과 함께하는 연대의 힘'},
+  {ctx:'위험한 임무',q:'두려운 일 앞에서 나는?',a:'두렵지만 사명감으로 묵묵히 한다',b:'어떻게 하면 효과적일지 고민한다'},
+  {ctx:'독립의 방식',q:'내가 중요하게 생각하는 변화는?',a:'교육과 계몽으로 확실하게',b:'직접적이고 강렬한 행동으로 당장'},
+  {ctx:'지치는 날들',q:'힘든 순간, 나는?',a:'내면을 돌아보며 마음을 다잡는다',b:'더 강하게 밀어붙인다'},
+  {ctx:'하루의 끝',q:'혼자만의 시간에 나는 주로?',a:'책을 읽으며 생각을 정리한다',b:'앞으로의 행동 계획을 세운다'},
+  {ctx:'먼 훗날',q:'내가 가장 소중히 여기는 것은?',a:'다음 세대에게 남겨줄 더 나은 세상',b:'지금 이 순간 새로운 길을 여는 일'},
+  {ctx:'독립의 본질',q:'독립을 이루는 가장 큰 힘은?',a:'모두가 하나로 뭉치는 단결',b:'개인의 굳은 신념과 투쟁'}
+];
+
+const INTRO=[
+  '1919년 3월 1일,',
+  '이른 봄의 거리에',
+  '뜨거운 함성이 울려 퍼집니다.',
+  '',
+  '당신의 가슴속 깊은 곳,',
+  '조용히 타오르던 불꽃이',
+  '이제 세상을 향해 깨어납니다.',
+  '',
+  '당신의 영혼은',
+  '어떤 색의 불꽃을 품고 있나요?'
+];
+
+/* === STATE === */
+let curQ=0,picks=[],result=null;
+
+/* === SCREEN TRANSITION === */
+function goTo(id){
+  document.querySelectorAll('.scr').forEach(s=>{
+    if(s.classList.contains('on')){s.classList.add('out');setTimeout(()=>s.classList.remove('on','out'),580);}
+  });
+  setTimeout(()=>document.getElementById(id).classList.add('on'),300);
+}
+
+/* === MIC INTERACTION === */
+let audioContext, analyser, microphone, blowTimer = null, isBlowing = false, stream;
+
+document.getElementById('btnStart').addEventListener('click', async () => {
+  const promptEl = document.getElementById('micPrompt');
+  const btnStart = document.getElementById('btnStart');
+  
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    analyser = audioContext.createAnalyser();
+    microphone = audioContext.createMediaStreamSource(stream);
+    microphone.connect(analyser);
+    analyser.fftSize = 256;
+    const bufferLength = analyser.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+    
+    promptEl.textContent = "촛불을 향해 '후~' 불어주세요! 🕯️";
+    btnStart.style.display = 'none';
+    document.getElementById('btnSkipMic').style.display = 'none';
+
+    function checkAudio() {
+      if(isBlowing) return;
+      analyser.getByteFrequencyData(dataArray);
+      let sum = 0;
+      for(let i=0; i<bufferLength; i++) sum += dataArray[i];
+      let avg = sum / bufferLength;
+      
+      // 불기 감지 (평균 볼륨이 일정 이상일 때)
+      if (avg > 45) { 
+        if(!blowTimer) blowTimer = setTimeout(() => {
+          extinguishCandle();
+        }, 400); // 0.4초간 지속되면 꺼짐
+      } else {
+        clearTimeout(blowTimer);
+        blowTimer = null;
+      }
+      requestAnimationFrame(checkAudio);
+    }
+    checkAudio();
+  } catch (err) {
+    promptEl.textContent = "마이크를 사용할 수 없습니다. 아래 버튼으로 시작하세요.";
+    btnStart.style.display = 'none';
+    document.getElementById('btnSkipMic').textContent = "클릭하여 시작하기";
+  }
+});
+
+document.getElementById('btnSkipMic').addEventListener('click', () => {
+  document.getElementById('micPrompt').textContent = "";
+  extinguishCandle();
+});
+
+function extinguishCandle() {
+  if (isBlowing) return;
+  isBlowing = true;
+  document.getElementById('candleFlame').style.opacity = '0';
+  document.getElementById('canvas').style.transition = 'opacity 2s';
+  document.getElementById('canvas').style.opacity = '0';
+  document.getElementById('micPrompt').textContent = "독립의 불꽃이 당신의 마음속으로 옮겨갔습니다.";
+  
+  if (stream) stream.getTracks().forEach(track => track.stop());
+  if (audioContext) audioContext.close();
+  
+  setTimeout(() => {
+    goTo('intro');
+    setTimeout(typeIntro, 650);
+  }, 2000);
+}
+
+
+/* === INTRO === */
+function typeIntro(){
+  const box=document.getElementById('itBody'),btn=document.getElementById('btnGo');
+  box.innerHTML='<span class="cursor"></span>';
+  const full=INTRO.join('\n');
+  let i=0;
+  function tick(){
+    if(i>=full.length){setTimeout(()=>{box.querySelector('.cursor')?.remove();btn.style.transition='opacity .4s,transform .4s';btn.classList.add('show');},400);return;}
+    const ch=full[i++],cur=box.querySelector('.cursor');
+    if(ch==='\n'){cur.before(document.createElement('br'));setTimeout(tick,150);}
+    else{cur.before(document.createTextNode(ch));setTimeout(tick,45);}
+  }
+  tick();
+}
+document.getElementById('btnGo').addEventListener('click',startQ);
+
+/* === QUESTIONS === */
+function startQ(){curQ=0;picks=[];buildDots();goTo('question');setTimeout(renderQ,400);}
+
+function buildDots(){
+  const s=document.getElementById('qStatus');s.innerHTML='';
+  for(let i=0;i<10;i++){const d=document.createElement('div');d.className='q-dot';d.id='dot'+i;s.appendChild(d);}
+}
+function updateDots(){
+  for(let i=0;i<10;i++){
+    const d=document.getElementById('dot'+i);
+    d.className='q-dot'+(i<curQ?' done':i===curQ?' cur':'');
+  }
+}
+function renderQ(){
+  const q=QUESTIONS[curQ];
+  document.getElementById('progFill').style.width=(curQ/10*100)+'%';
+  document.getElementById('qNum').textContent='QUESTION '+String(curQ+1).padStart(2,'0');
+  document.getElementById('qCtx').textContent=q.ctx;
+  document.getElementById('qTxt').textContent=q.q;
+  document.getElementById('aA').textContent=q.a;
+  document.getElementById('aB').textContent=q.b;
+  updateDots();
+  const inner=document.querySelector('.q-inner'),ans=document.getElementById('answers');
+  [inner,ans].forEach(el=>{el.style.transition='none';el.style.opacity='0';el.style.transform='translateY(18px)';});
+  setTimeout(()=>{inner.style.transition='all .38s ease';inner.style.opacity='1';inner.style.transform='translateY(0)';},30);
+  setTimeout(()=>{ans.style.transition='all .38s ease';ans.style.opacity='1';ans.style.transform='translateY(0)';},110);
+  document.querySelectorAll('.btn-ans').forEach(b=>{b.classList.remove('selected');b.style.pointerEvents='';});
+}
+function pick(choice){
+  document.querySelectorAll('.btn-ans').forEach(b=>b.style.pointerEvents='none');
+  (choice===0?document.getElementById('bA'):document.getElementById('bB')).classList.add('selected');
+  picks.push(choice);
+  setTimeout(()=>{
+    if(curQ<9){curQ++;renderQ();}
+    else{document.getElementById('progFill').style.width='100%';goTo('loading');setTimeout(calcResult,1800);}
+  },400);
+}
+
+/* === RESULT === */
+function calcResult(){
+  let best=-1,winner=FIGHTERS[0];
+  FIGHTERS.forEach(f=>{
+    let s=0;
+    for(let i=0;i<10;i++)if(picks[i]===f.profile[i])s++;
+    if(s>best){best=s;winner=f;}
+  });
+  result=winner;
+  
+  // 초상화 세팅 (이미지가 없으면 빈 화면 대신 촛불 아이콘 표시)
+  const wrap = document.getElementById('rPortraitWrap');
+  const imgEl = document.getElementById('rImg');
+  const phEl = document.getElementById('rPlaceholder');
+  wrap.style.display = 'block';
+  if(result.img) {
+    imgEl.src = result.img;
+    imgEl.style.display = 'block';
+    phEl.style.display = 'none';
+  } else {
+    imgEl.style.display = 'none';
+    phEl.style.display = 'flex';
+  }
+
+  document.getElementById('rName').textContent=result.name;
+  document.getElementById('rDates').textContent=result.dates;
+  document.getElementById('rType').textContent='\u275D '+result.type+' \u275E';
+  document.getElementById('rQuote').textContent=result.quote;
+  document.getElementById('rDesc').textContent=result.desc;
+  document.getElementById('rTags').innerHTML=result.tags.map(t=>'<span class="tag">'+t+'</span>').join('');
+  document.getElementById('result').scrollTop=0;
+  goTo('result');
+}
+
+/* === UTILS === */
+function saveImage() {
+  const target = document.getElementById('captureArea');
+  const watermark = document.getElementById('watermark');
+  watermark.style.display = 'block'; // 캡쳐할 때만 워터마크 표시
+  
+  toast('이미지를 생성 중입니다... ⏳');
+  
+  html2canvas(target, { 
+    backgroundColor: '#08070a',
+    scale: 2 // 고해상도 캡처
+  }).then(canvas => {
+    watermark.style.display = 'none';
+    const link = document.createElement('a');
+    link.download = '독립운동가_테스트결과_' + result.name + '.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    toast('이미지가 저장되었습니다! 📸');
+  }).catch(err => {
+    watermark.style.display = 'none';
+    toast('저장에 실패했습니다. 😢');
+  });
+}
+
+function copyResult(){
+  if(!result)return;
+  const txt='🔥 나의 독립 정신 테스트 결과\n\n내 영혼의 독립운동가: '+result.name+' ('+result.dates+')\n'+result.type+'\n\n"'+result.quote+'"\n\n'+result.desc+'\n\n#독립운동가테스트 #광복절 #서대문형무소';
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(txt).then(()=>toast('결과가 복사되었습니다! 📋')).catch(()=>fallback(txt));
+  }else fallback(txt);
+}
+function fallback(txt){
+  const el=document.createElement('textarea');el.value=txt;el.style.cssText='position:fixed;left:-9999px';
+  document.body.appendChild(el);el.focus();el.select();
+  try{document.execCommand('copy');toast('결과가 복사되었습니다!');}catch(e){toast('복사 실패 😢');}
+  document.body.removeChild(el);
+}
+function toast(msg){
+  const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');
+  setTimeout(()=>el.classList.remove('on'),2600);
+}
+function retry(){
+  result=null;
+  isBlowing=false;
+  document.getElementById('candleFlame').style.opacity = '1';
+  document.getElementById('canvas').style.opacity = '1';
+  document.getElementById('micPrompt').textContent = "";
+  document.getElementById('btnStart').style.display = 'flex';
+  document.getElementById('btnSkipMic').style.display = 'block';
+  goTo('cover');
+}
+
+// 이미지 사전 로딩 (결과 화면 지연 방지: 학생들이 문제 푸는 동안 백그라운드에서 사진들을 미리 다운로드)
+window.addEventListener('load', () => {
+  FIGHTERS.forEach(f => {
+    if(f.img) {
+      const preImg = new Image();
+      preImg.src = f.img;
+    }
+  });
+});
+</script>
+</body>
+</html>
