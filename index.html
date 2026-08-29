@@ -379,6 +379,82 @@ function goTo(id){
   setTimeout(()=>document.getElementById(id).classList.add('on'),300);
 }
 
+/* === SOUND EFFECTS (Web Audio API) === */
+let audioCtx = null;
+
+function playIgniteSound() {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    
+    // 1. Warm fire noise (lowpass filtered noise)
+    const bufferSize = audioCtx.sampleRate * 0.6;
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+    
+    const noise = audioCtx.createBufferSource();
+    noise.buffer = buffer;
+    
+    const lp = audioCtx.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.frequency.setValueAtTime(400, audioCtx.currentTime);
+    lp.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
+    lp.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.5);
+    
+    const noiseGain = audioCtx.createGain();
+    noiseGain.gain.setValueAtTime(0, audioCtx.currentTime);
+    noiseGain.gain.linearRampToValueAtTime(1.5, audioCtx.currentTime + 0.05);
+    noiseGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+    
+    noise.connect(lp);
+    lp.connect(noiseGain);
+    noiseGain.connect(audioCtx.destination);
+    noise.start();
+
+    // 2. Magical chime (sine wave)
+    const osc = audioCtx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, audioCtx.currentTime); // A5
+    osc.frequency.exponentialRampToValueAtTime(1760, audioCtx.currentTime + 0.3);
+    
+    const oscGain = audioCtx.createGain();
+    oscGain.gain.setValueAtTime(0, audioCtx.currentTime);
+    oscGain.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + 0.05);
+    oscGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
+    
+    osc.connect(oscGain);
+    oscGain.connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 0.6);
+  } catch(e) { console.log(e); }
+}
+
+function playSuccessSound() {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    
+    // A major chord (A, C#, E, A)
+    const freqs = [440, 554.37, 659.25, 880];
+    freqs.forEach((freq, i) => {
+      const osc = audioCtx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0, audioCtx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + 0.1 + (i*0.1));
+      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 2.5);
+      
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(audioCtx.currentTime + (i*0.1));
+      osc.stop(audioCtx.currentTime + 2.5);
+    });
+  } catch(e) { console.log(e); }
+}
+
 /* === INTERACTION === */
 let litCount = 0;
 const totalCandles = 3;
@@ -386,6 +462,9 @@ const totalCandles = 3;
 function igniteMultiCandle(candleEl) {
   if(candleEl.classList.contains('lit')) return;
   candleEl.classList.add('lit');
+  
+  // 소리 재생
+  playIgniteSound();
   
   const fw = candleEl.querySelector('.fw-wrap');
   fw.style.opacity = '1';
@@ -400,6 +479,9 @@ function igniteMultiCandle(candleEl) {
     glow.style.opacity = (litCount * 0.33).toString();
     promptEl.textContent = "👆 세 개의 초를 모두 터치하여 불꽃을 밝혀주세요 (" + litCount + "/3)";
   } else {
+    // 모든 초가 켜졌을 때
+    setTimeout(playSuccessSound, 300); // 아주 짧은 딜레이 후 웅장한 사운드
+    
     glow.style.opacity = '1';
     promptEl.style.color = '#fff';
     promptEl.textContent = "온 세상이 환하게 밝아집니다!";
