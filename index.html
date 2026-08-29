@@ -151,7 +151,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
   <div id="glowOverlay" style="position:absolute; inset:0; background:radial-gradient(ellipse at 50% 50%, rgba(200,120,40,0.5) 0%, transparent 80%); opacity:0; transition:opacity 1s ease; pointer-events:none; z-index:1;"></div>
   
   <!-- 교사용 비밀 버튼 (우측 상단 투명 영역) -->
-  <div id="secretZone" style="position:absolute; top:0; right:0; width:80px; height:80px; z-index:999;"></div>
+  <div id="secretZone" style="position:absolute; top:0; right:0; width:150px; height:150px; z-index:999; cursor:default;"></div>
   
   <div class="candles-wrap" style="gap:0; margin: 60px 0;">
     <div class="cv-candle" style="cursor:pointer; transform:translateY(25px);" onclick="igniteMultiCandle(this)">
@@ -366,8 +366,8 @@ const INTRO=[
   '이 거대한 역사의 소용돌이 속으로',
   '발을 내디뎠습니다.',
   '',
-  '과연 당신의 영혼은',
-  '어떤 독립운동가의 길을 걷게 될까요?'
+  '과연 당신의 가슴속에는',
+  '어떤 독립운동가가 살아 숨 쉬고 있을까요?'
 ];
 
 /* === STATE === */
@@ -769,6 +769,11 @@ let tapTimer = null;
 document.getElementById('secretZone').addEventListener('click', () => {
   tapCount++;
   clearTimeout(tapTimer);
+  
+  const sz = document.getElementById('secretZone');
+  sz.style.backgroundColor = 'rgba(255,255,255,0.1)';
+  setTimeout(()=>sz.style.backgroundColor='transparent', 100);
+
   if(tapCount >= 5) {
     tapCount = 0;
     const pwd = prompt("교사용 대시보드 비밀번호를 입력하세요: (기본값: 0815)");
@@ -778,7 +783,7 @@ document.getElementById('secretZone').addEventListener('click', () => {
       alert("비밀번호가 틀렸습니다.");
     }
   } else {
-    tapTimer = setTimeout(() => tapCount=0, 800);
+    tapTimer = setTimeout(() => tapCount=0, 2500);
   }
 });
 
