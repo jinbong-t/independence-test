@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>나의 독립 정신 찾기 | 내 영혼의 독립운동가</title>
+<title>나의 독립 정신 찾기 | 내 가슴속에 살아 숨 쉬는 독립운동가</title>
 <meta name="description" content="10가지 질문으로 찾는 나의 독립운동가. 20가지 결과 유형. 광복절·서대문형무소 체험활동 전 추천 테스트.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -173,7 +173,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
   <div class="bg-text">대한독립만세</div>
   <p class="cv-tag ts-anim ts-d1">빼앗긴 들에도 봄은 오는가</p>
   <h1 class="cv-title ts-anim ts-d2">나의 독립 정신 찾기</h1>
-  <p class="cv-sub ts-anim ts-d3">결의와 열망으로 가득 찬 내 영혼의 독립운동가는?</p>
+  <p class="cv-sub ts-anim ts-d3">내 가슴속에 살아 숨 쉬는 독립운동가는?</p>
   <div class="deco-line ts-anim ts-d4"></div>
   <button class="btn-start ts-anim ts-d5" id="btnGoToIntro" style="margin-top:30px;">
     <span>테스트 시작하기 &rarr;</span>
@@ -720,7 +720,7 @@ function saveImage() {
 
 function copyResult(){
   if(!result)return;
-  const txt='🔥 나의 독립 정신 테스트 결과\n\n내 영혼의 독립운동가: '+result.name+' ('+result.dates+')\n'+result.type+'\n\n"'+result.quote+'"\n\n'+result.desc+'\n\n#독립운동가테스트 #광복절 #서대문형무소';
+  const txt='🔥 나의 독립 정신 테스트 결과\n\n내 가슴속에 살아 숨 쉬는 독립운동가: '+result.name+' ('+result.dates+')\n'+result.type+'\n\n"'+result.quote+'"\n\n'+result.desc+'\n\n#독립운동가테스트 #광복절 #서대문형무소';
   if(navigator.clipboard){
     navigator.clipboard.writeText(txt).then(()=>toast('결과가 복사되었습니다! 📋')).catch(()=>fallback(txt));
   }else fallback(txt);
