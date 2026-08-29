@@ -744,57 +744,7 @@ function playExplosionSound() {
 }
 
 function playManseSound() {
-  try {
-    if (!bgmCtx) return;
-    
-    // 웅장한 군중 환호 (브라운 노이즈)
-    const bs = bgmCtx.sampleRate * 4.0;
-    const buf = bgmCtx.createBuffer(1, bs, bgmCtx.sampleRate);
-    const data = buf.getChannelData(0);
-    let last = 0;
-    for(let i=0; i<bs; i++) {
-      let white = Math.random()*2-1;
-      data[i] = (last + (0.02 * white)) / 1.02;
-      last = data[i];
-      data[i] *= 3.0; 
-    }
-    
-    const noise = bgmCtx.createBufferSource();
-    noise.buffer = buf;
-    
-    const bp = bgmCtx.createBiquadFilter();
-    bp.type = 'bandpass';
-    bp.frequency.value = 400; // 낮고 거대한 군중 소리 대역
-    bp.Q.value = 0.5;
-    
-    const gain = bgmCtx.createGain();
-    gain.gain.setValueAtTime(0, bgmCtx.currentTime);
-    gain.gain.linearRampToValueAtTime(2.0, bgmCtx.currentTime + 1.0); // 함성이 고조됨
-    gain.gain.exponentialRampToValueAtTime(0.01, bgmCtx.currentTime + 3.8); // 서서히 여운을 남기며 사라짐
-    
-    noise.connect(bp);
-    bp.connect(gain);
-    gain.connect(bgmCtx.destination);
-    noise.start();
-
-    // 묵직한 북소리 (둥-- 둥--)
-    for(let j=0; j<2; j++) {
-      const osc = bgmCtx.createOscillator();
-      const oscGain = bgmCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(60, bgmCtx.currentTime + (j*1.2));
-      osc.frequency.exponentialRampToValueAtTime(20, bgmCtx.currentTime + (j*1.2) + 1.0);
-      
-      oscGain.gain.setValueAtTime(0, bgmCtx.currentTime + (j*1.2));
-      oscGain.gain.linearRampToValueAtTime(1.5, bgmCtx.currentTime + (j*1.2) + 0.1);
-      oscGain.gain.exponentialRampToValueAtTime(0.01, bgmCtx.currentTime + (j*1.2) + 1.0);
-      
-      osc.connect(oscGain);
-      oscGain.connect(bgmCtx.destination);
-      osc.start(bgmCtx.currentTime + (j*1.2));
-      osc.stop(bgmCtx.currentTime + (j*1.2) + 1.0);
-    }
-  } catch(e) {}
+  // 사용자의 요청으로 만세 소리 제거됨
 }
 
 function playSuccessSound() {
