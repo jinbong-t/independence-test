@@ -63,7 +63,8 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .btn-go:hover{background:rgba(200,144,42,.1);border-color:var(--gold);}
 
 /* QUESTION */
-#question{justify-content:flex-start;padding-top:14vh;}
+#question{justify-content:flex-start;padding-top:14vh;background:radial-gradient(circle at 50% 30%,#181105 0%,#08070a 100%);}
+.grain-overlay{position:absolute;inset:0;z-index:-1;opacity:0.25;mix-blend-mode:overlay;pointer-events:none;background-image:url('data:image/svg+xml,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="n"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23n)"/%3E%3C/svg%3E');}
 .prog-wrap{position:fixed;top:0;left:0;width:100%;height:3px;background:rgba(200,144,42,.12);z-index:200;}
 .prog-fill{height:100%;background:linear-gradient(90deg,var(--gold-d),var(--gold-l));transition:width .5s ease;box-shadow:0 0 10px var(--gold);}
 .q-status{position:fixed;top:12px;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:8px;z-index:100;pointer-events:none;}
@@ -188,6 +189,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 
 <!-- QUESTION -->
 <div class="scr" id="question">
+  <div class="grain-overlay"></div>
   <div class="prog-wrap"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
   <div class="q-status" id="qStatus"></div>
   <div class="q-inner">
@@ -343,29 +345,29 @@ const FIGHTERS=[
 ];
 
 const QUESTIONS=[
-  {ctx:'역사의 갈림길',q:'세상을 바꾸는 가장 좋은 방법은?',a:'글과 예술로 마음을 움직인다',b:'직접 행동으로 변화를 만든다'},
-  {ctx:'부당한 상황',q:'불의를 마주쳤을 때 나의 첫 반응은?',a:'기록하고 알려서 연대한다',b:'망설임 없이 맞서 싸운다'},
-  {ctx:'나의 성향',q:'나는 어떤 사람에 더 가깝나?',a:'조용히 자신만의 길을 걷는 사람',b:'사람들과 함께 앞장서 이끄는 사람'},
-  {ctx:'어려움 속에서',q:'나에게 가장 큰 힘이 되는 것은?',a:'시, 철학 등 정신적인 것들',b:'동료들과 함께하는 연대의 힘'},
-  {ctx:'위험한 임무',q:'두려운 일 앞에서 나는?',a:'두렵지만 사명감으로 묵묵히 한다',b:'어떻게 하면 효과적일지 고민한다'},
-  {ctx:'독립의 방식',q:'내가 중요하게 생각하는 변화는?',a:'교육과 계몽으로 확실하게',b:'직접적이고 강렬한 행동으로 당장'},
-  {ctx:'지치는 날들',q:'힘든 순간, 나는?',a:'내면을 돌아보며 마음을 다잡는다',b:'더 강하게 밀어붙인다'},
-  {ctx:'하루의 끝',q:'혼자만의 시간에 나는 주로?',a:'책을 읽으며 생각을 정리한다',b:'앞으로의 행동 계획을 세운다'},
-  {ctx:'먼 훗날',q:'내가 가장 소중히 여기는 것은?',a:'다음 세대에게 남겨줄 더 나은 세상',b:'지금 이 순간 새로운 길을 여는 일'},
-  {ctx:'독립의 본질',q:'독립을 이루는 가장 큰 힘은?',a:'모두가 하나로 뭉치는 단결',b:'개인의 굳은 신념과 투쟁'}
+  {ctx:'1919년 봄, 경성',q:'무고한 학생을 때리는 일경을 보았다.',a:'(분노를 삼키고) 이 만행을 알릴 격문을 배포한다',b:'(군중 앞을 막아서며) "당장 그 손 놓으시오!"'},
+  {ctx:'비밀 결사 조직',q:'조직의 다음 목표를 정하는 회의에서 나는?',a:'비밀 연락망을 넓히고 자금을 모아야 한다',b:'친일파 처단과 무장 투쟁을 즉각 시작해야 한다'},
+  {ctx:'3.1 만세 운동',q:'탑골공원에 수많은 인파가 모였다.',a:'눈에 띄지 않게 군중 속에 섞여 태극기를 나눈다',b:'단상 위로 올라가 가장 먼저 대한독립만세를 외친다'},
+  {ctx:'상하이 임시정부',q:'임시정부에 합류한 당신에게 주어진 임무는?',a:'은밀히 적의 정보를 수집하는 고독한 밀정',b:'동지들을 규합해 특공대를 이끄는 대장'},
+  {ctx:'거사 전날 밤',q:'내일 폭탄을 투척해야 한다. 잠들기 전 나는?',a:'유서를 쓰며 흔들리는 마음을 묵묵히 다잡는다',b:'지도의 도주로와 폭탄 타이머를 수십 번 점검한다'},
+  {ctx:'독립의 방향성',q:'독립을 이루기 위해 더 시급한 것은?',a:'학교를 세우고 신문을 발행해 백성을 깨우자',b:'만주로 넘어가 거대한 무장 독립군을 기르자'},
+  {ctx:'가혹한 시련',q:'동지가 일경에 체포되었다는 소식을 들었다.',a:'슬픔을 억누르고 대의를 위해 다음 계획을 준비한다',b:'끓어오르는 분노로 즉각 구출 작전을 세운다'},
+  {ctx:'서대문형무소',q:'결국 체포되어 차가운 독방에 갇혔다.',a:'조용히 명상하며 머릿속으로 시를 짓는다',b:'벽을 두드려 옆방 동지들과 탈옥을 모의한다'},
+  {ctx:'꿈꾸는 광복',q:'우리가 되찾을 나라는 어떤 모습이어야 할까?',a:'아이들이 우리말로 마음껏 배우고 뛰어노는 나라',b:'부패한 구시대를 부수고 평등한 제도를 세운 나라'},
+  {ctx:'최후의 심문',q:'일경이 배후를 대라며 총을 겨눌 때, 나는?',a:'"나 하나 죽어도 이천만 동포가 일어날 것이다"',b:'"내 개인의 굳은 의지는 결코 꺾지 못할 것이다"'}
 ];
 
 const INTRO=[
   '1919년 3월 1일,',
-  '이른 봄의 거리에',
-  '뜨거운 함성이 울려 퍼집니다.',
+  '경성 탑골공원에',
+  '뜨거운 만세 소리가 울려 퍼집니다.',
   '',
-  '당신의 가슴속 깊은 곳,',
-  '조용히 타오르던 불꽃이',
-  '이제 세상을 향해 깨어납니다.',
+  '당신은 방금 태극기를 품에 숨기고',
+  '이 거대한 역사의 소용돌이 속으로',
+  '발을 내디뎠습니다.',
   '',
-  '당신의 영혼은',
-  '어떤 색의 불꽃을 품고 있나요?'
+  '과연 당신의 영혼은',
+  '어떤 독립운동가의 길을 걷게 될까요?'
 ];
 
 /* === STATE === */
@@ -417,6 +419,69 @@ function playIgniteSound() {
     gainNode.connect(audioCtx.destination);
     noise.start();
   } catch(e) { console.log(e); }
+}
+
+let bgmCtx = null;
+let bgmGain = null;
+function playGrandBGM() {
+  try {
+    if (!bgmCtx) bgmCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (bgmCtx.state === 'suspended') bgmCtx.resume();
+    if (bgmGain) return;
+    
+    bgmGain = bgmCtx.createGain();
+    bgmGain.gain.setValueAtTime(0, bgmCtx.currentTime);
+    bgmGain.gain.linearRampToValueAtTime(0.2, bgmCtx.currentTime + 3.0);
+    
+    const freqs = [73.42, 110, 146.83];
+    freqs.forEach(freq => {
+      const osc = bgmCtx.createOscillator();
+      osc.type = 'sawtooth';
+      osc.frequency.value = freq;
+      
+      const lp = bgmCtx.createBiquadFilter();
+      lp.type = 'lowpass';
+      lp.frequency.value = 150;
+      
+      const lfo = bgmCtx.createOscillator();
+      lfo.type = 'sine';
+      lfo.frequency.value = 0.05 + Math.random()*0.05;
+      const lfoGain = bgmCtx.createGain();
+      lfoGain.gain.value = 30;
+      lfo.connect(lfoGain);
+      lfoGain.connect(lp.frequency);
+      lfo.start();
+      
+      osc.connect(lp);
+      lp.connect(bgmGain);
+      osc.start();
+    });
+    bgmGain.connect(bgmCtx.destination);
+  } catch(e){}
+}
+function stopGrandBGM() {
+  if (bgmGain && bgmCtx) {
+    bgmGain.gain.linearRampToValueAtTime(0, bgmCtx.currentTime + 2.0);
+    setTimeout(() => { try { bgmCtx.close(); } catch(e){} bgmCtx = null; bgmGain = null; }, 2100);
+  }
+}
+function playClickSound() {
+  try {
+    if (!bgmCtx) return;
+    const osc = bgmCtx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(150, bgmCtx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(0.01, bgmCtx.currentTime + 0.3);
+    
+    const gain = bgmCtx.createGain();
+    gain.gain.setValueAtTime(0.4, bgmCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, bgmCtx.currentTime + 0.3);
+    
+    osc.connect(gain);
+    gain.connect(bgmCtx.destination);
+    osc.start();
+    osc.stop(bgmCtx.currentTime + 0.3);
+  } catch(e){}
 }
 
 function playSuccessSound() {
@@ -531,7 +596,7 @@ function typeIntro(){
 document.getElementById('btnGo').addEventListener('click',startQ);
 
 /* === QUESTIONS === */
-function startQ(){curQ=0;picks=[];buildDots();goTo('question');setTimeout(renderQ,400);}
+function startQ(){curQ=0;picks=[];buildDots();playGrandBGM();goTo('question');setTimeout(renderQ,400);}
 
 function buildDots(){
   const s=document.getElementById('qStatus');s.innerHTML='';
@@ -559,6 +624,7 @@ function renderQ(){
   document.querySelectorAll('.btn-ans').forEach(b=>{b.classList.remove('selected');b.style.pointerEvents='';});
 }
 function pick(choice){
+  playClickSound();
   document.querySelectorAll('.btn-ans').forEach(b=>b.style.pointerEvents='none');
   (choice===0?document.getElementById('bA'):document.getElementById('bB')).classList.add('selected');
   picks.push(choice);
@@ -570,6 +636,7 @@ function pick(choice){
 
 /* === RESULT === */
 function calcResult(){
+  stopGrandBGM();
   let best=-1,winner=FIGHTERS[0];
   FIGHTERS.forEach(f=>{
     let s=0;
