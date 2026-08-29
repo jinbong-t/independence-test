@@ -152,7 +152,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
   <div id="glowOverlay" style="position:absolute; inset:0; background:radial-gradient(ellipse at 50% 50%, rgba(200,120,40,0.5) 0%, transparent 80%); opacity:0; transition:opacity 1s ease; pointer-events:none; z-index:1;"></div>
   
   <!-- 교사용 비밀 버튼 (우측 상단 투명 영역) -->
-  <div id="secretZone" style="position:absolute; top:0; right:0; width:150px; height:150px; z-index:999; cursor:default;"></div>
+  <button id="secretZone" style="position:absolute; top:0; right:0; width:150px; height:150px; z-index:999; background:transparent; border:none; outline:none; cursor:pointer; -webkit-tap-highlight-color:transparent;"></button>
   
   <div class="candles-wrap" style="gap:0; margin: 60px 0;">
     <div class="cv-candle" style="cursor:pointer; transform:translateY(25px);" onclick="igniteMultiCandle(this)">
@@ -529,6 +529,58 @@ function playExplosionSound() {
   } catch(e) {}
 }
 
+function playManseSound() {
+  try {
+    if (!bgmCtx) return;
+    
+    // 웅장한 함성 (브라운 노이즈)
+    const bs = bgmCtx.sampleRate * 4.0;
+    const buf = bgmCtx.createBuffer(1, bs, bgmCtx.sampleRate);
+    const data = buf.getChannelData(0);
+    let last = 0;
+    for(let i=0; i<bs; i++) {
+      let white = Math.random()*2-1;
+      data[i] = (last + (0.02 * white)) / 1.02;
+      last = data[i];
+      data[i] *= 3.0; 
+    }
+    
+    const noise = bgmCtx.createBufferSource();
+    noise.buffer = buf;
+    
+    const bp = bgmCtx.createBiquadFilter();
+    bp.type = 'bandpass';
+    bp.frequency.value = 600; // 사람 목소리 대역
+    bp.Q.value = 0.8;
+    
+    const gain = bgmCtx.createGain();
+    gain.gain.setValueAtTime(0, bgmCtx.currentTime);
+    gain.gain.linearRampToValueAtTime(1.5, bgmCtx.currentTime + 0.3);
+    gain.gain.exponentialRampToValueAtTime(0.01, bgmCtx.currentTime + 3.8);
+    
+    noise.connect(bp);
+    bp.connect(gain);
+    gain.connect(bgmCtx.destination);
+    noise.start();
+
+    // 대한독립만세 음성 합성 (군중)
+    if (window.speechSynthesis) {
+      let voices = speechSynthesis.getVoices().filter(v => v.lang.includes('ko'));
+      for (let i = 0; i < 7; i++) {
+        setTimeout(() => {
+          const u = new SpeechSynthesisUtterance("대한독립 만세!");
+          u.lang = 'ko-KR';
+          u.pitch = 0.6 + Math.random() * 0.8; 
+          u.rate = 0.8 + Math.random() * 0.4;  
+          u.volume = 0.7;
+          if (voices.length > 0) u.voice = voices[Math.floor(Math.random() * voices.length)];
+          speechSynthesis.speak(u);
+        }, Math.random() * 400); 
+      }
+    }
+  } catch(e) {}
+}
+
 function playSuccessSound() {
   try {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -678,9 +730,17 @@ function pick(choice){
   (choice===0?document.getElementById('bA'):document.getElementById('bB')).classList.add('selected');
   picks.push(choice);
   setTimeout(()=>{
-    if(curQ<9){curQ++;renderQ();}
-    else{document.getElementById('progFill').style.width='100%';goTo('loading');setTimeout(calcResult,1800);}
-  },400);
+    if(curQ<9){
+      curQ++;
+      setTimeout(renderQ, 400);
+    }else{
+      playManseSound();
+      setTimeout(()=>{
+        goTo('loading');
+        setTimeout(calcResult, 3000);
+      }, 400);
+    }
+  }, 400);
 }
 
 /* === RESULT === */
