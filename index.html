@@ -287,9 +287,16 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
   </div>
 
   <div class="dash-card">
-    <h3 style="color:var(--cream); font-size:16px; margin-bottom:16px;">반·번호별 참여 현황 (최신순)</h3>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h3 style="color:var(--cream); font-size:16px; margin:0;">반·번호별 참여 현황</h3>
+      <select id="classFilter" style="background:rgba(0,0,0,.5); border:1px solid var(--gold-d); color:var(--gold-l); padding:4px 8px; border-radius:4px; font-family:'Noto Sans KR', sans-serif;">
+        <option value="all">전체 반</option>
+      </select>
+    </div>
     <ul class="dash-list" id="dashList"></ul>
   </div>
+  
+  <button id="btnResetData" style="margin-top:10px; background:transparent; border:1px solid #a03020; color:#a03020; padding:8px 16px; border-radius:8px; cursor:pointer; font-weight:700;">전체 데이터 초기화</button>
 </div>
 
 </div>
@@ -897,6 +904,55 @@ document.getElementById('secretZone').addEventListener('click', () => {
 });
 
 let isDashLoaded = false;
+let currentDashData = [];
+let classFilterValue = 'all';
+
+function renderDashboardList() {
+  let filtered = currentDashData;
+  if(classFilterValue !== 'all') {
+    filtered = currentDashData.filter(item => String(item.class) === String(classFilterValue));
+  }
+  
+  const counts = {};
+  filtered.forEach(item => { counts[item.resultName] = (counts[item.resultName] || 0) + 1; });
+  const sorted = Object.keys(counts).map(k => ({name:k, count:counts[k]})).sort((a,b)=>b.count-a.count);
+  
+  const statHtml = sorted.map(s => `
+    <div class="dash-stat-row">
+      <span style="color:#ede0cc; width:70px;">${s.name}</span>
+      <div class="dash-bar-bg">
+        <div class="dash-bar-fill" style="width:${filtered.length ? (s.count/filtered.length)*100 : 0}%;"></div>
+      </div>
+      <span style="color:var(--gold-l); font-weight:700; width:40px; text-align:right;">${s.count}명</span>
+    </div>
+  `).join('');
+  document.getElementById('dashStats').innerHTML = statHtml;
+  document.getElementById('dashTotal').textContent = filtered.length;
+  
+  const listHtml = filtered.map(item => `
+    <li>
+      <span style="color:#ccc;">${item.class}반 ${item.number}번</span>
+      <span style="color:var(--gold); font-weight:700;">${item.resultName}</span>
+    </li>
+  `).join('');
+  document.getElementById('dashList').innerHTML = listHtml;
+}
+
+document.getElementById('classFilter').addEventListener('change', (e) => {
+  classFilterValue = e.target.value;
+  renderDashboardList();
+});
+
+document.getElementById('btnResetData').addEventListener('click', () => {
+  if(confirm('정말로 모든 학생의 활동 데이터를 삭제하시겠습니까? (복구 불가)')) {
+    if(prompt('삭제를 확인하려면 "초기화" 라고 입력해주세요.') === '초기화') {
+      db.ref('independence_test_results').remove()
+        .then(() => alert('데이터가 모두 초기화되었습니다.'))
+        .catch(err => alert('오류가 발생했습니다: ' + err));
+    }
+  }
+});
+
 function initDashboard() {
   goTo('dashboard');
   if(isDashLoaded) return;
@@ -906,36 +962,23 @@ function initDashboard() {
     const data = snap.val();
     if(!data) {
       document.getElementById('dashStats').innerHTML = '<p style="color:#999;font-size:13px;">아직 데이터가 없습니다.</p>';
+      document.getElementById('dashList').innerHTML = '';
+      document.getElementById('dashTotal').textContent = '0';
       return;
     }
-    const list = Object.values(data);
-    document.getElementById('dashTotal').textContent = list.length;
     
-    // 통계 계산
-    const counts = {};
-    list.forEach(item => { counts[item.resultName] = (counts[item.resultName] || 0) + 1; });
-    const sorted = Object.keys(counts).map(k => ({name:k, count:counts[k]})).sort((a,b)=>b.count-a.count);
+    currentDashData = Object.values(data).sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
     
-    const statHtml = sorted.map(s => `
-      <div class="dash-stat-row">
-        <span style="color:#ede0cc; width:70px;">${s.name}</span>
-        <div class="dash-bar-bg">
-          <div class="dash-bar-fill" style="width:${(s.count/list.length)*100}%;"></div>
-        </div>
-        <span style="color:var(--gold-l); font-weight:700; width:40px; text-align:right;">${s.count}명</span>
-      </div>
-    `).join('');
-    document.getElementById('dashStats').innerHTML = statHtml;
+    const classes = [...new Set(currentDashData.map(item => item.class))].sort((a,b) => a-b);
+    const filterSel = document.getElementById('classFilter');
+    const currVal = filterSel.value;
+    filterSel.innerHTML = '<option value="all">전체 반</option>' + classes.map(c => `<option value="${c}">${c}반</option>`).join('');
     
-    // 리스트 최신순 정렬
-    list.sort((a,b) => (b.timestamp || 0) - (a.timestamp || 0));
-    const listHtml = list.map(item => `
-      <li>
-        <span style="color:#ccc;">${item.class}반 ${item.number}번</span>
-        <span style="color:var(--gold); font-weight:700;">${item.resultName}</span>
-      </li>
-    `).join('');
-    document.getElementById('dashList').innerHTML = listHtml;
+    if(currVal !== 'all' && classes.includes(Number(currVal))) filterSel.value = currVal;
+    else filterSel.value = 'all';
+    
+    classFilterValue = filterSel.value;
+    renderDashboardList();
   });
 }
 
