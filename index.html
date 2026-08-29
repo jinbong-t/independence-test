@@ -28,7 +28,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 /* COVER */
 #cover{background:radial-gradient(ellipse 80% 60% at 50% 40%,#1e1508 0%,#08070a 65%);gap:0;}
 .bg-text{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Noto Serif KR',serif;font-size:18vw;font-weight:900;color:rgba(200,144,42,0.03);white-space:nowrap;pointer-events:none;z-index:-1;letter-spacing:10px;transform:rotate(-10deg);}
-.cv-candle{width:clamp(90px, 28vw, 160px);height:clamp(135px, 42vw, 240px);margin:0;}
+.cv-candle{width:clamp(110px, 36vw, 180px);height:clamp(165px, 54vw, 270px);margin:0 -12px;}
 .cv-candle svg{width:100%;height:100%;overflow:visible;}
 .candles-wrap{display:flex; justify-content:center; gap:20px; margin:40px 0; position:relative; z-index:10;}
 .flame-anim{animation:flame 2s ease-in-out infinite;transform-origin:50% 90%;transition:opacity 0.3s;}
@@ -152,7 +152,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
   <!-- 교사용 비밀 버튼 (우측 상단 투명 영역) -->
   <div id="secretZone" style="position:absolute; top:0; right:0; width:80px; height:80px; z-index:999;"></div>
   
-  <div class="candles-wrap" style="gap:15px; margin: 60px 0;">
+  <div class="candles-wrap" style="gap:0; margin: 60px 0;">
     <div class="cv-candle" style="cursor:pointer; transform:translateY(25px);" onclick="igniteMultiCandle(this)">
       <svg viewBox="0 0 60 90" fill="none"><g class="fw-wrap" style="opacity:0; transform:scale(0); transform-origin:50% 90%; transition:all 1.5s cubic-bezier(0.1, 0.8, 0.2, 1);"><g class="flame-anim"><ellipse cx="30" cy="18" rx="14" ry="24" fill="url(#f1)" opacity=".9"/><ellipse cx="30" cy="22" rx="7" ry="12" fill="url(#f2)"/></g></g><rect x="15" y="36" width="30" height="48" rx="4" fill="#c8a858"/><rect x="15" y="36" width="30" height="8" rx="2.5" fill="#b09040"/><rect x="18" y="46" width="4" height="32" rx="2" fill="rgba(180,140,50,.35)"/><rect x="28" y="46" width="4" height="32" rx="2" fill="rgba(180,140,50,.35)"/><rect x="38" y="46" width="4" height="32" rx="2" fill="rgba(180,140,50,.35)"/><rect x="18" y="78" width="24" height="4" rx="2" fill="#a08030" opacity=".55"/><line x1="30" y1="36" x2="30" y2="28" stroke="#9a7020" stroke-width="2" stroke-linecap="round"/><defs><radialGradient id="f1" cx="50%" cy="60%" r="50%"><stop offset="0%" stop-color="#fff8a0"/><stop offset="60%" stop-color="#f0a020"/><stop offset="100%" stop-color="#c03010" stop-opacity="0"/></radialGradient><radialGradient id="f2" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffc0"/><stop offset="100%" stop-color="#f8d040" stop-opacity=".4"/></radialGradient></defs></svg>
     </div>
