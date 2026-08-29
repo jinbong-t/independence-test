@@ -37,6 +37,13 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .cv-sub{font-size:clamp(14px,3.5vw,18px);color:var(--text-dim);text-align:center;margin-bottom:8px;}
 .cv-info{font-size:11px;color:var(--text-f);letter-spacing:1.5px;margin-bottom:28px;}
 .mic-prompt{font-size:18px;color:var(--gold-l);margin-top:20px;margin-bottom:24px;height:24px;text-align:center;font-weight:700;text-shadow:0 0 15px rgba(200,144,42,0.8);animation:pulse 1.5s infinite;}
+.ts-anim { opacity: 0; transform: translateY(20px); transition: all 1s ease; }
+.ts-anim.show { opacity: 1; transform: translateY(0); }
+.ts-d1 { transition-delay: 0.5s; }
+.ts-d2 { transition-delay: 1.2s; }
+.ts-d3 { transition-delay: 1.9s; }
+.ts-d4 { transition-delay: 2.6s; }
+.ts-d5 { transition-delay: 3.3s; }
 @keyframes pulse{0%,100%{opacity:.8;transform:scale(1);}50%{opacity:1;transform:scale(1.05);}}
 .btn-start{background:linear-gradient(135deg,#c8902a,#7a5518);border:1px solid rgba(200,144,42,.5);color:var(--cream);font-family:'Noto Serif KR',serif;font-size:clamp(15px,3.5vw,18px);font-weight:700;padding:16px 42px;border-radius:60px;cursor:pointer;letter-spacing:1.5px;transition:all .3s ease;box-shadow:0 6px 24px rgba(200,144,42,.25),0 0 48px rgba(200,144,42,.08);display:flex;align-items:center;gap:10px;}
 .btn-start:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(200,144,42,.4),0 0 60px rgba(200,144,42,.15);}
@@ -136,13 +143,12 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 <canvas id="canvas"></canvas>
 <div id="app">
 
-<!-- COVER -->
+<!-- SCREEN 1: COVER (CANDLE ONLY) -->
 <div class="scr on" id="cover">
   <!-- 교사용 비밀 버튼 (우측 상단 투명 영역) -->
   <div id="secretZone" style="position:absolute; top:0; right:0; width:80px; height:80px; z-index:999;"></div>
   
-  <div class="bg-text">대한독립만세</div>
-  <div class="cv-candle">
+  <div class="cv-candle" style="margin-top:100px;">
     <svg viewBox="0 0 52 52" fill="none">
       <g class="flame-anim" id="candleFlame">
         <ellipse cx="26" cy="13" rx="8" ry="11" fill="url(#f1)" opacity=".9"/>
@@ -167,17 +173,25 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
       </defs>
     </svg>
   </div>
-  <p class="cv-tag">빼앗긴 들에도 봄은 오는가</p>
-  <h1 class="cv-title">나의 독립 정신<br>찾기</h1>
-  <p class="cv-sub">결의와 열망으로 가득 찬 내 영혼의 독립운동가는?</p>
-  <div class="deco-line"></div>
   
   <p class="mic-prompt" id="micPrompt">🔥 촛불을 향해 '후~' 불어서 끄세요!</p>
   
   <button class="btn-start" id="btnStart">
     <span>🎤 마이크 켜고 촛불 불기</span>
   </button>
-  <button class="btn-skip-mic" id="btnSkipMic">마이크 없이 바로 시작하기</button>
+  <button class="btn-skip-mic" id="btnSkipMic">마이크 없이 바로 넘어가기</button>
+</div>
+
+<!-- SCREEN 2: TITLE REVEAL -->
+<div class="scr" id="titleScreen">
+  <div class="bg-text">대한독립만세</div>
+  <p class="cv-tag ts-anim ts-d1">빼앗긴 들에도 봄은 오는가</p>
+  <h1 class="cv-title ts-anim ts-d2">나의 독립 정신<br>찾기</h1>
+  <p class="cv-sub ts-anim ts-d3">결의와 열망으로 가득 찬 내 영혼의 독립운동가는?</p>
+  <div class="deco-line ts-anim ts-d4"></div>
+  <button class="btn-start ts-anim ts-d5" id="btnGoToIntro" style="margin-top:30px;">
+    <span>테스트 시작하기 &rarr;</span>
+  </button>
 </div>
 
 <!-- INTRO -->
@@ -438,17 +452,23 @@ function extinguishCandle() {
   document.getElementById('candleFlame').style.opacity = '0';
   document.getElementById('canvas').style.transition = 'opacity 2s';
   document.getElementById('canvas').style.opacity = '0';
-  document.getElementById('micPrompt').textContent = "독립의 불꽃이 당신의 마음속으로 옮겨갔습니다.";
+  document.getElementById('micPrompt').textContent = "독립의 불꽃이 세상으로 퍼져나갑니다.";
   
   if (stream) stream.getTracks().forEach(track => track.stop());
   if (audioContext) audioContext.close();
   
   setTimeout(() => {
-    goTo('intro');
-    setTimeout(typeIntro, 650);
+    goTo('titleScreen');
+    setTimeout(() => {
+      document.querySelectorAll('#titleScreen .ts-anim').forEach(el => el.classList.add('show'));
+    }, 100);
   }, 2000);
 }
 
+document.getElementById('btnGoToIntro').addEventListener('click', () => {
+  goTo('intro');
+  setTimeout(typeIntro, 650);
+});
 
 /* === INTRO === */
 function typeIntro(){
@@ -608,10 +628,12 @@ function retry(){
   result=null;
   isBlowing=false;
   document.getElementById('candleFlame').style.opacity = '1';
+  document.getElementById('canvas').style.transition = 'opacity 0s';
   document.getElementById('canvas').style.opacity = '1';
-  document.getElementById('micPrompt').textContent = "";
+  document.getElementById('micPrompt').textContent = "🔥 촛불을 향해 '후~' 불어서 끄세요!";
   document.getElementById('btnStart').style.display = 'flex';
   document.getElementById('btnSkipMic').style.display = 'block';
+  document.querySelectorAll('#titleScreen .ts-anim').forEach(el => el.classList.remove('show'));
   goTo('cover');
 }
 
