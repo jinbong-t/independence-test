@@ -218,7 +218,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
       
       <!-- 초상화 영역 -->
       <div class="portrait-wrap" id="rPortraitWrap">
-        <img src="" alt="초상화" class="portrait-img" id="rImg">
+        <img src="" alt="초상화" class="portrait-img" id="rImg" crossorigin="anonymous">
         <div id="rPlaceholder" style="display:none; width:100%; height:100%; flex-direction:column; align-items:center; justify-content:center; background:radial-gradient(circle, #2a1f10 0%, #08070a 80%);">
           <div style="transform:scale(1.2); margin-bottom:10px;">
             <svg viewBox="0 0 52 52" fill="none" style="width:52px;height:52px;">
@@ -570,7 +570,9 @@ function saveImage() {
   
   html2canvas(target, { 
     backgroundColor: '#08070a',
-    scale: 2 // 고해상도 캡처
+    scale: 2, // 고해상도 캡처
+    useCORS: true, // 외부 이미지(위키백과 등) 캡처 허용
+    allowTaint: true
   }).then(canvas => {
     watermark.style.display = 'none';
     const link = document.createElement('a');
@@ -679,6 +681,7 @@ window.addEventListener('load', () => {
   FIGHTERS.forEach(f => {
     if(f.img) {
       const preImg = new Image();
+      preImg.crossOrigin = 'anonymous'; // 외부 이미지 캐싱 시 CORS 오류 방지
       preImg.src = f.img;
     }
   });
