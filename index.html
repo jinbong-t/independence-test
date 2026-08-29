@@ -46,6 +46,7 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .ts-d4 { transition-delay: 2.6s; }
 .ts-d5 { transition-delay: 3.3s; }
 @keyframes pulse{0%,100%{opacity:.8;transform:scale(1);}50%{opacity:1;transform:scale(1.05);}}
+@keyframes shake{10%,90%{transform:translate3d(-2px,2px,0);}20%,80%{transform:translate3d(4px,-2px,0);}30%,50%,70%{transform:translate3d(-8px,4px,0);}40%,60%{transform:translate3d(8px,-4px,0);}}
 .btn-start{background:linear-gradient(135deg,#c8902a,#7a5518);border:1px solid rgba(200,144,42,.5);color:var(--cream);font-family:'Noto Serif KR',serif;font-size:clamp(15px,3.5vw,18px);font-weight:700;padding:16px 42px;border-radius:60px;cursor:pointer;letter-spacing:1.5px;transition:all .3s ease;box-shadow:0 6px 24px rgba(200,144,42,.25),0 0 48px rgba(200,144,42,.08);display:flex;align-items:center;gap:10px;}
 .btn-start:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(200,144,42,.4),0 0 60px rgba(200,144,42,.15);}
 .btn-skip-mic{background:transparent;border:none;color:var(--text-dim);font-size:12px;margin-top:16px;text-decoration:underline;cursor:pointer;opacity:0.7;}
@@ -484,6 +485,50 @@ function playClickSound() {
   } catch(e){}
 }
 
+function playExplosionSound() {
+  try {
+    if (!bgmCtx) return;
+    const bufferSize = bgmCtx.sampleRate * 2.0; 
+    const buffer = bgmCtx.createBuffer(1, bufferSize, bgmCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    let lastOut = 0;
+    for (let i = 0; i < bufferSize; i++) {
+        let white = Math.random() * 2 - 1;
+        data[i] = (lastOut + (0.02 * white)) / 1.02;
+        lastOut = data[i];
+        data[i] *= 3.5;
+    }
+    
+    const noise = bgmCtx.createBufferSource();
+    noise.buffer = buffer;
+    
+    const lp = bgmCtx.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.frequency.setValueAtTime(2000, bgmCtx.currentTime);
+    lp.frequency.exponentialRampToValueAtTime(100, bgmCtx.currentTime + 0.2);
+    
+    const gainNode = bgmCtx.createGain();
+    gainNode.gain.setValueAtTime(0, bgmCtx.currentTime);
+    gainNode.gain.linearRampToValueAtTime(5.0, bgmCtx.currentTime + 0.02);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, bgmCtx.currentTime + 1.8);
+    
+    noise.connect(lp);
+    lp.connect(gainNode);
+    gainNode.connect(bgmCtx.destination);
+    noise.start();
+
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:9999;pointer-events:none;opacity:1;transition:opacity 1.5s ease-out;';
+    document.body.appendChild(overlay);
+    
+    const app = document.getElementById('app');
+    app.style.animation = 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both';
+    
+    setTimeout(() => overlay.style.opacity = '0', 50);
+    setTimeout(() => { overlay.remove(); app.style.animation = ''; }, 1500);
+  } catch(e) {}
+}
+
 function playSuccessSound() {
   try {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -624,7 +669,11 @@ function renderQ(){
   document.querySelectorAll('.btn-ans').forEach(b=>{b.classList.remove('selected');b.style.pointerEvents='';});
 }
 function pick(choice){
-  playClickSound();
+  if (curQ === 4) { // Question 5 (거사 전날 밤)
+    playExplosionSound();
+  } else {
+    playClickSound();
+  }
   document.querySelectorAll('.btn-ans').forEach(b=>b.style.pointerEvents='none');
   (choice===0?document.getElementById('bA'):document.getElementById('bB')).classList.add('selected');
   picks.push(choice);
