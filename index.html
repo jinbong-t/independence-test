@@ -387,46 +387,35 @@ function playIgniteSound() {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     if (audioCtx.state === 'suspended') audioCtx.resume();
     
-    // 1. Warm fire noise (lowpass filtered noise)
-    const bufferSize = audioCtx.sampleRate * 0.6;
+    const bufferSize = audioCtx.sampleRate * 2.5; 
     const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
     const data = buffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+    let lastOut = 0;
+    for (let i = 0; i < bufferSize; i++) {
+        let white = Math.random() * 2 - 1;
+        data[i] = (lastOut + (0.02 * white)) / 1.02;
+        lastOut = data[i];
+        data[i] *= 3.5;
+    }
     
     const noise = audioCtx.createBufferSource();
     noise.buffer = buffer;
     
     const lp = audioCtx.createBiquadFilter();
     lp.type = 'lowpass';
-    lp.frequency.setValueAtTime(400, audioCtx.currentTime);
-    lp.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + 0.1);
-    lp.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.5);
+    lp.frequency.setValueAtTime(1000, audioCtx.currentTime);
+    lp.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.15);
     
-    const noiseGain = audioCtx.createGain();
-    noiseGain.gain.setValueAtTime(0, audioCtx.currentTime);
-    noiseGain.gain.linearRampToValueAtTime(1.5, audioCtx.currentTime + 0.05);
-    noiseGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+    gainNode.gain.linearRampToValueAtTime(2.5, audioCtx.currentTime + 0.05);
+    gainNode.gain.exponentialRampToValueAtTime(0.3, audioCtx.currentTime + 0.4);
+    gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 2.4);
     
     noise.connect(lp);
-    lp.connect(noiseGain);
-    noiseGain.connect(audioCtx.destination);
+    lp.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
     noise.start();
-
-    // 2. Magical chime (sine wave)
-    const osc = audioCtx.createOscillator();
-    osc.type = 'sine';
-    osc.frequency.setValueAtTime(880, audioCtx.currentTime); // A5
-    osc.frequency.exponentialRampToValueAtTime(1760, audioCtx.currentTime + 0.3);
-    
-    const oscGain = audioCtx.createGain();
-    oscGain.gain.setValueAtTime(0, audioCtx.currentTime);
-    oscGain.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + 0.05);
-    oscGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.6);
-    
-    osc.connect(oscGain);
-    oscGain.connect(audioCtx.destination);
-    osc.start();
-    osc.stop(audioCtx.currentTime + 0.6);
   } catch(e) { console.log(e); }
 }
 
@@ -435,23 +424,35 @@ function playSuccessSound() {
     if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     if (audioCtx.state === 'suspended') audioCtx.resume();
     
-    // A major chord (A, C#, E, A)
-    const freqs = [440, 554.37, 659.25, 880];
-    freqs.forEach((freq, i) => {
-      const osc = audioCtx.createOscillator();
-      osc.type = 'sine';
-      osc.frequency.value = freq;
-      
-      const gain = audioCtx.createGain();
-      gain.gain.setValueAtTime(0, audioCtx.currentTime);
-      gain.gain.linearRampToValueAtTime(0.15, audioCtx.currentTime + 0.1 + (i*0.1));
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 2.5);
-      
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start(audioCtx.currentTime + (i*0.1));
-      osc.stop(audioCtx.currentTime + 2.5);
-    });
+    const bufferSize = audioCtx.sampleRate * 4.0;
+    const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const data = buffer.getChannelData(0);
+    let lastOut = 0;
+    for (let i = 0; i < bufferSize; i++) {
+        let white = Math.random() * 2 - 1;
+        data[i] = (lastOut + (0.02 * white)) / 1.02;
+        lastOut = data[i];
+        data[i] *= 3.5;
+    }
+    
+    const noise = audioCtx.createBufferSource();
+    noise.buffer = buffer;
+    
+    const lp = audioCtx.createBiquadFilter();
+    lp.type = 'lowpass';
+    lp.frequency.setValueAtTime(300, audioCtx.currentTime);
+    lp.frequency.linearRampToValueAtTime(2000, audioCtx.currentTime + 1.2); 
+    lp.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 3.9);
+    
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(4.0, audioCtx.currentTime + 1.2);
+    gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 3.9);
+    
+    noise.connect(lp);
+    lp.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    noise.start();
   } catch(e) { console.log(e); }
 }
 
