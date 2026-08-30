@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -167,11 +167,59 @@ body{font-family:'Noto Sans KR',sans-serif;background:var(--bg);color:var(--text
 .dash-bar-fill { height:100%; background:var(--gold); }
 .dash-list { list-style:none; font-size:14px; max-height:280px; overflow-y:auto; padding-right:5px; }
 .dash-list li { padding:10px 0; border-bottom:1px solid rgba(200,144,42,0.15); display:flex; justify-content:space-between; align-items:center; }
+/* POKEMON CARD CAPTURE */
+#captureCard { position:absolute; top:-9999px; left:-9999px; width:400px; min-height:560px; background:linear-gradient(135deg, #ffd700 0%, #b8860b 40%, #ff8c00 100%); border-radius:18px; padding:12px; font-family:'Noto Sans KR', sans-serif; box-sizing:border-box; color:#111; z-index:-1000; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+.pc-inner { background:linear-gradient(135deg, #f5f5dc 0%, #dcdcdc 100%); border-radius:10px; width:100%; height:100%; display:flex; flex-direction:column; padding:12px; box-sizing:border-box; box-shadow: inset 0 0 8px rgba(0,0,0,0.2); }
+.pc-top { display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #b8860b; padding-bottom:6px; margin-bottom:12px; }
+.pc-top-left { display:flex; align-items:center; gap:8px; }
+.pc-top-type { font-size:11px; font-weight:700; color:#fff; background:#8b1a10; padding:2px 8px; border-radius:12px; font-family:'Noto Serif KR', serif; }
+.pc-name { font-size:24px; font-weight:900; font-family:'Noto Serif KR', serif; color:#222; }
+.pc-hp { font-size:18px; font-weight:900; color:#b01010; display:flex; align-items:center; gap:4px; text-shadow: 1px 1px 0 #fff; }
+.pc-hp span { font-size:11px; color:#555; text-shadow:none; }
+.pc-img-wrap { width:100%; height:220px; border:4px solid #b8860b; box-shadow:0 4px 6px rgba(0,0,0,0.4); box-sizing:border-box; background:#fff; position:relative; overflow:hidden; }
+.pc-img { width:100%; height:100%; object-fit:cover; filter: contrast(1.1); }
+.pc-mid { display:flex; justify-content:space-between; font-size:11px; color:#333; background:rgba(218,165,32,0.3); padding:4px 8px; border:1px solid #b8860b; margin:4px 0 12px 0; font-weight:bold; }
+.pc-skill { background:rgba(255,255,255,0.7); border-radius:8px; padding:12px; margin-bottom:12px; border:1px solid #ccc; box-shadow:inset 0 0 4px rgba(0,0,0,0.1); }
+.pc-skill-title { display:flex; align-items:center; gap:8px; margin-bottom:6px; }
+.pc-skill-icon { width:16px; height:16px; background:radial-gradient(circle,#ff4500,#8b0000); border-radius:50%; box-shadow:0 0 3px #000; }
+.pc-skill-name { font-size:15px; font-weight:800; color:#111; font-family:'Noto Serif KR', serif; }
+.pc-skill-desc { font-size:13px; line-height:1.5; color:#333; word-break:keep-all; }
+.pc-tags { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:auto; }
+.pc-tags .tag { background:#eee; border:1px solid #aaa; color:#333; font-size:10px; padding:3px 8px; border-radius:12px; font-weight:bold; }
+.pc-footer { text-align:center; font-size:10px; color:#555; border-top:1px solid #ccc; padding-top:8px; letter-spacing:1px; margin-top:12px; font-weight:bold; }
 </style>
 </head>
 <body>
 <canvas id="canvas"></canvas>
 <div id="app">
+<!-- POKEMON CARD FOR CAPTURE (HIDDEN) -->
+<div id="captureCard">
+  <div class="pc-inner">
+    <div class="pc-top">
+      <div class="pc-top-left">
+        <span class="pc-top-type" id="pcRole">기본</span>
+        <span class="pc-name" id="pcName">이름</span>
+      </div>
+      <div class="pc-hp"><span>독립의지</span> 1919</div>
+    </div>
+    <div class="pc-img-wrap">
+      <img src="" id="pcImg" class="pc-img" crossorigin="anonymous">
+    </div>
+    <div class="pc-mid">
+      <span id="pcDates">1800~1900</span>
+      <span id="pcNo">NO.0815</span>
+    </div>
+    <div class="pc-skill">
+      <div class="pc-skill-title">
+        <div class="pc-skill-icon"></div>
+        <div class="pc-skill-name" id="pcQuote">"명언"</div>
+      </div>
+      <div class="pc-skill-desc" id="pcDesc">설명</div>
+    </div>
+    <div class="pc-tags" id="pcTags"></div>
+    <div class="pc-footer">나와 닮은 독립운동가 성향 찾기 테스트 - 영원한 불꽃</div>
+  </div>
+</div>
 
 <!-- SCREEN 1: COVER (CANDLE ONLY) -->
 <div class="scr on" id="cover" style="background:#000;">
@@ -968,28 +1016,47 @@ function showResultScreen() {
 
 /* === UTILS === */
 function saveImage() {
-  const target = document.getElementById('captureArea');
-  const watermark = document.getElementById('watermark');
-  watermark.style.display = 'block'; // 캡쳐할 때만 워터마크 표시
+  if(!result) return;
   
-  toast('이미지를 생성 중입니다... ⏳');
+  // 포켓몬 카드 HTML에 데이터 주입
+  document.getElementById('pcRole').textContent = "독립투사";
+  document.getElementById('pcName').textContent = result.name;
   
-  html2canvas(target, { 
-    backgroundColor: '#08070a',
-    scale: 2, // 고해상도 캡처
-    useCORS: true, // 외부 이미지(위키백과 등) 캡처 허용
-    allowTaint: true
-  }).then(canvas => {
-    watermark.style.display = 'none';
-    const link = document.createElement('a');
-    link.download = '독립운동가_테스트결과_' + result.name + '.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-    toast('이미지가 저장되었습니다! 📸');
-  }).catch(err => {
-    watermark.style.display = 'none';
-    toast('저장에 실패했습니다. 😢');
-  });
+  const pcImg = document.getElementById('pcImg');
+  if(result.img) {
+    pcImg.src = result.img;
+    pcImg.style.display = 'block';
+  } else {
+    pcImg.style.display = 'none';
+  }
+  
+  document.getElementById('pcDates').textContent = result.dates;
+  document.getElementById('pcNo').textContent = "NO." + (Math.floor(Math.random()*8999)+1000); // 1000~9999 랜덤
+  document.getElementById('pcQuote').textContent = '\u275D ' + result.quote + ' \u275E';
+  document.getElementById('pcDesc').textContent = result.desc;
+  document.getElementById('pcTags').innerHTML = result.tags.map(t=>'<span class="tag">'+t+'</span>').join('');
+
+  const target = document.getElementById('captureCard');
+  
+  toast('포켓몬 카드 생성 중입니다... ⏳');
+  
+  // 약간의 지연 후 캡처 (이미지 로딩 보장)
+  setTimeout(() => {
+    html2canvas(target, { 
+      backgroundColor: null, // 투명 배경 허용
+      scale: 2, // 고해상도 캡처
+      useCORS: true, 
+      allowTaint: true
+    }).then(canvas => {
+      const link = document.createElement('a');
+      link.download = '독립운동가_포켓몬카드_' + result.name + '.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      toast('카드 이미지가 저장되었습니다! 🃏✨');
+    }).catch(err => {
+      toast('카드 저장에 실패했습니다. 😢');
+    });
+  }, 100);
 }
 
 function copyResult(){
